@@ -6,6 +6,7 @@ public static class VoxelData
 {
     public static readonly int CHUNK_WIDTH = 5;
     public static readonly int CHUNK_HEIGHT = 15;
+    public static readonly int WORLD_SIZE_IN_CHUNKS = 5;
 
     public static readonly int textureAtlasSizeInBlocks = 4;
     public static float normalizedBlockTextureSize

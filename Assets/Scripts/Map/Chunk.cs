@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chunk : MonoBehaviour
+public class Chunk
 
 {
-    public MeshRenderer meshRenderer;
-    public MeshFilter meshFilter;
+    GameObject chunkObject;
+    MeshRenderer meshRenderer;
+    MeshFilter meshFilter;
+    public ChunkCoordinates coordinates;
 
     int vertexIndex = 0;
     List < Vector3 > vertices = new List<Vector3>();
@@ -17,13 +19,23 @@ public class Chunk : MonoBehaviour
 
     ChunkLoader chunkLoader;
 
-    void Start()
+    public Chunk(ChunkCoordinates coordinates, ChunkLoader chunkLoader)
     {
-        chunkLoader = GameObject.Find("ChunkLoader").GetComponent<ChunkLoader>();
+        this.chunkLoader = chunkLoader;
+        this.coordinates = coordinates;
+        chunkObject = new GameObject();
+        chunkObject.name = "Chunk";
+        meshFilter = chunkObject.AddComponent<MeshFilter>();
+        meshRenderer = chunkObject.AddComponent<MeshRenderer>();
+        meshRenderer.material = chunkLoader.material;
+        chunkObject.transform.SetParent(chunkLoader.transform);
+        chunkObject.transform.position = new Vector3(coordinates.x * VoxelData.CHUNK_WIDTH, 0f, coordinates.z * VoxelData.CHUNK_WIDTH) ;
+
         populateVoxelMap();
         createMeshData();
         createMesh();
     }
+
     void populateVoxelMap()
     {
 
@@ -65,7 +77,7 @@ public class Chunk : MonoBehaviour
         int y = Mathf.FloorToInt(voxel.y);
         int z = Mathf.FloorToInt(voxel.z);
         if (x < 0 || x > VoxelData.CHUNK_WIDTH - 1 || y < 0 || y > VoxelData.CHUNK_HEIGHT - 1 || z < 0 || z > VoxelData.CHUNK_WIDTH - 1) return false;
-        return chunkLoader.blockTypes[voxelMap[x,y,z]].isSolid;
+        return BlockTypes.blockTypes[voxelMap[x,y,z]].isSolid;
     }
 
 
@@ -82,7 +94,7 @@ public class Chunk : MonoBehaviour
                 vertices.Add(position + VoxelData.cubeVoxelVertices[VoxelData.voxelTriangles[i, 1]]);
                 vertices.Add(position + VoxelData.cubeVoxelVertices[VoxelData.voxelTriangles[i, 2]]);
                 vertices.Add(position + VoxelData.cubeVoxelVertices[VoxelData.voxelTriangles[i, 3]]);
-                addTexture(chunkLoader.blockTypes[blockId].getTextureId(i));
+                addTexture(BlockTypes.blockTypes[blockId].getTextureId(i));
                 triangles.Add(vertexIndex);
                 triangles.Add(vertexIndex+1);
                 triangles.Add(vertexIndex+2);
@@ -119,5 +131,17 @@ public class Chunk : MonoBehaviour
         uvs.Add(new Vector2(x, y + VoxelData.normalizedBlockTextureSize));
         uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y));
         uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y + VoxelData.normalizedBlockTextureSize));
+    }
+}
+
+public class ChunkCoordinates
+{
+    public int x;
+    public int z;
+
+    public ChunkCoordinates(int x, int z)
+    {
+        this.x = x;
+        this.z = z;
     }
 }
