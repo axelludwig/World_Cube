@@ -74,9 +74,9 @@ public class Chunk : MonoBehaviour
                     int triangleIndex = VoxelData.voxelTriangles[i, j];
                     vertices.Add(VoxelData.cubeVoxelVertices[triangleIndex] + position);
                     triangles.Add(vertexIndex);
-                    uvs.Add(Vector2.zero);
                     vertexIndex++;
                 }
+                addTexture(0);
             }
         }
     }
@@ -96,5 +96,15 @@ public class Chunk : MonoBehaviour
     {
         float y = textureId / VoxelData.textureAtlasSizeInBlocks;
         float x = textureId - (y * VoxelData.textureAtlasSizeInBlocks);
+        x *= VoxelData.normalizedBlockTextureSize;
+        y *= VoxelData.normalizedBlockTextureSize;
+
+        y = 1f - y - VoxelData.normalizedBlockTextureSize;
+        uvs.Add(new Vector2(x, y));
+        uvs.Add(new Vector2(x, y + VoxelData.normalizedBlockTextureSize));
+        uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y));
+        uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y));
+        uvs.Add(new Vector2(x, y + VoxelData.normalizedBlockTextureSize));
+        uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y+ VoxelData.normalizedBlockTextureSize));
     }
 }
