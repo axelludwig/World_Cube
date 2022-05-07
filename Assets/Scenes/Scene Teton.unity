@@ -490,22 +490,22 @@ MonoBehaviour:
     bottomfaceTexture: 2
     leftfaceTexture: 2
     rightfaceTexture: 2
-  - blockName: Grass
+  - blockName: Dirt
     isSolid: 1
-    backfaceTexture: 2
-    frontfaceTexture: 2
-    topfaceTexture: 7
-    bottomfaceTexture: 2
-    leftfaceTexture: 2
-    rightfaceTexture: 2
-  - blockName: Grass
+    backfaceTexture: 1
+    frontfaceTexture: 1
+    topfaceTexture: 1
+    bottomfaceTexture: 1
+    leftfaceTexture: 1
+    rightfaceTexture: 1
+  - blockName: Wood
     isSolid: 1
-    backfaceTexture: 2
-    frontfaceTexture: 2
-    topfaceTexture: 7
-    bottomfaceTexture: 2
-    leftfaceTexture: 2
-    rightfaceTexture: 2
+    backfaceTexture: 5
+    frontfaceTexture: 5
+    topfaceTexture: 6
+    bottomfaceTexture: 6
+    leftfaceTexture: 5
+    rightfaceTexture: 5
 --- !u!4 &2073705676
 Transform:
   m_ObjectHideFlags: 0

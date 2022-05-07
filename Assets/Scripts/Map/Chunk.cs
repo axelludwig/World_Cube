@@ -24,31 +24,26 @@ public class Chunk : MonoBehaviour
         createMeshData();
         createMesh();
     }
-
-
-    bool checkVoxel(Vector3 voxel)
-    {
-        int x = Mathf.FloorToInt(voxel.x);
-        int y = Mathf.FloorToInt(voxel.y);
-        int z = Mathf.FloorToInt(voxel.z);
-        if (x < 0 || x > VoxelData.CHUNK_WIDTH - 1 || y < 0 || y > VoxelData.CHUNK_HEIGHT - 1 || z < 0 || z > VoxelData.CHUNK_WIDTH - 1) return false;
-        return chunkLoader.blockTypes[voxelMap[x,y,z]].isSolid;
-    }
-
     void populateVoxelMap()
     {
+
         for (int y = 0; y < VoxelData.CHUNK_HEIGHT; y++)
         {
             for (int x = 0; x < VoxelData.CHUNK_WIDTH; x++)
             {
                 for (int z = 0; z < VoxelData.CHUNK_WIDTH; z++)
                 {
-                    voxelMap[x, y, z] = 0;
+                    if (y <= 1)
+                        voxelMap[x, y, z] = 0;
+                    else if (y == VoxelData.CHUNK_HEIGHT - 1)
+                        voxelMap[x, y, z] = 1;
+                    else
+                        voxelMap[x, y, z] = 2;
                 }
             }
         }
-    }
 
+    }
     void createMeshData()
     {
         for (int y = 0; y < VoxelData.CHUNK_HEIGHT; y++)
@@ -63,20 +58,38 @@ public class Chunk : MonoBehaviour
         }
     }
 
+
+    bool checkVoxel(Vector3 voxel)
+    {
+        int x = Mathf.FloorToInt(voxel.x);
+        int y = Mathf.FloorToInt(voxel.y);
+        int z = Mathf.FloorToInt(voxel.z);
+        if (x < 0 || x > VoxelData.CHUNK_WIDTH - 1 || y < 0 || y > VoxelData.CHUNK_HEIGHT - 1 || z < 0 || z > VoxelData.CHUNK_WIDTH - 1) return false;
+        return chunkLoader.blockTypes[voxelMap[x,y,z]].isSolid;
+    }
+
+
+
     void addVoxelDataToChunk(Vector3 position)
     {
         for (int i = 0; i < 6; i++)
         {
             if(!checkVoxel(position+VoxelData.faceChecks[i]))
             {
-                for (int j = 0; j < 6; j++)
-                {
-                    int triangleIndex = VoxelData.voxelTriangles[i, j];
-                    vertices.Add(VoxelData.cubeVoxelVertices[triangleIndex] + position);
-                    triangles.Add(vertexIndex);
-                    vertexIndex++;
-                }
-                addTexture(0);
+                byte blockId = voxelMap[(int)position.x, (int)position.y, (int)position.z];
+
+                vertices.Add(position + VoxelData.cubeVoxelVertices[VoxelData.voxelTriangles[i, 0]]);
+                vertices.Add(position + VoxelData.cubeVoxelVertices[VoxelData.voxelTriangles[i, 1]]);
+                vertices.Add(position + VoxelData.cubeVoxelVertices[VoxelData.voxelTriangles[i, 2]]);
+                vertices.Add(position + VoxelData.cubeVoxelVertices[VoxelData.voxelTriangles[i, 3]]);
+                addTexture(chunkLoader.blockTypes[blockId].getTextureId(i));
+                triangles.Add(vertexIndex);
+                triangles.Add(vertexIndex+1);
+                triangles.Add(vertexIndex+2);
+                triangles.Add(vertexIndex+2);
+                triangles.Add(vertexIndex+1);
+                triangles.Add(vertexIndex+3);
+                vertexIndex += 4;
             }
         }
     }
@@ -96,15 +109,15 @@ public class Chunk : MonoBehaviour
     {
         float y = textureId / VoxelData.textureAtlasSizeInBlocks;
         float x = textureId - (y * VoxelData.textureAtlasSizeInBlocks);
+
         x *= VoxelData.normalizedBlockTextureSize;
         y *= VoxelData.normalizedBlockTextureSize;
 
         y = 1f - y - VoxelData.normalizedBlockTextureSize;
+
         uvs.Add(new Vector2(x, y));
         uvs.Add(new Vector2(x, y + VoxelData.normalizedBlockTextureSize));
         uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y));
-        uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y));
-        uvs.Add(new Vector2(x, y + VoxelData.normalizedBlockTextureSize));
-        uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y+ VoxelData.normalizedBlockTextureSize));
+        uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y + VoxelData.normalizedBlockTextureSize));
     }
 }
