@@ -8,6 +8,7 @@ public class Chunk
     GameObject chunkObject;
     MeshRenderer meshRenderer;
     MeshFilter meshFilter;
+    MeshCollider meshCollider;
     public ChunkCoordinates coordinates;
 
     int vertexIndex = 0;
@@ -27,6 +28,7 @@ public class Chunk
         chunkObject.name = "Chunk";
         meshFilter = chunkObject.AddComponent<MeshFilter>();
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
+        meshCollider = chunkObject.AddComponent<MeshCollider>();
         meshRenderer.material = chunkLoader.material;
         chunkObject.transform.SetParent(chunkLoader.transform);
         chunkObject.transform.position = new Vector3(coordinates.x * VoxelData.CHUNK_WIDTH, 0f, coordinates.z * VoxelData.CHUNK_WIDTH) ;
@@ -34,6 +36,8 @@ public class Chunk
         populateVoxelMap();
         createMeshData();
         createMesh();
+
+        meshCollider.sharedMesh = meshFilter.mesh;
     }
 
     void populateVoxelMap()
