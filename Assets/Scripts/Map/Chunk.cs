@@ -8,6 +8,7 @@ public class Chunk
     GameObject chunkObject;
     MeshRenderer meshRenderer;
     MeshFilter meshFilter;
+    MeshCollider meshCollider;
     public ChunkCoordinates coordinates;
 
     int vertexIndex = 0;
@@ -27,6 +28,7 @@ public class Chunk
         chunkObject.name = "Chunk";
         meshFilter = chunkObject.AddComponent<MeshFilter>();
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
+        meshCollider = chunkObject.AddComponent<MeshCollider>();
         meshRenderer.material = chunkLoader.material;
         chunkObject.transform.SetParent(chunkLoader.transform);
         chunkObject.transform.position = new Vector3(coordinates.x * VoxelData.CHUNK_WIDTH, 0f, coordinates.z * VoxelData.CHUNK_WIDTH) ;
@@ -34,6 +36,8 @@ public class Chunk
         populateVoxelMap();
         createMeshData();
         createMesh();
+
+        meshCollider.sharedMesh = meshFilter.mesh;
     }
 
     void populateVoxelMap()
@@ -45,12 +49,7 @@ public class Chunk
             {
                 for (int z = 0; z < VoxelData.CHUNK_WIDTH; z++)
                 {
-                    if (y <= 1)
-                        voxelMap[x, y, z] = 0;
-                    else if (y == VoxelData.CHUNK_HEIGHT - 1)
-                        voxelMap[x, y, z] = 1;
-                    else
-                        voxelMap[x, y, z] = 2;
+                    voxelMap[x, y, z] = chunkLoader.getVoxel(new Vector3(x, y, z) + position);
                 }
             }
         }
@@ -64,36 +63,56 @@ public class Chunk
             {
                 for (int z = 0; z < VoxelData.CHUNK_WIDTH; z++)
                 {
-                    addVoxelDataToChunk(new Vector3(x, y, z));
+                    if(BlockTypes.blockTypes[voxelMap[x, y, z]].isSolid)
+                    {
+                        addVoxelDataToChunk(new Vector3(x, y, z));
+                    }
                 }
             }
         }
     }
 
-
+    /// <summary>
+    /// Vérifie si le voxel aux coordonnées données est solide ou non
+    /// </summary>
     bool checkVoxel(Vector3 voxel)
     {
         int x = Mathf.FloorToInt(voxel.x);
         int y = Mathf.FloorToInt(voxel.y);
         int z = Mathf.FloorToInt(voxel.z);
-        if (x < 0 || x > VoxelData.CHUNK_WIDTH - 1 || y < 0 || y > VoxelData.CHUNK_HEIGHT - 1 || z < 0 || z > VoxelData.CHUNK_WIDTH - 1) return false;
-        return BlockTypes.blockTypes[voxelMap[x,y,z]].isSolid;
+        if (!IsVoxelInChunk(x, y, z))
+        {
+            return BlockTypes.blockTypes[chunkLoader.getVoxel(voxel + position)].isSolid;
+        }
+        else
+        {
+            return BlockTypes.blockTypes[voxelMap[x,y,z]].isSolid;
+        }
+    }
+
+    bool IsVoxelInChunk(int x, int y, int z)
+    {
+
+        if (x < 0 || x > VoxelData.CHUNK_WIDTH - 1 || y < 0 || y > VoxelData.CHUNK_HEIGHT - 1 || z < 0 || z > VoxelData.CHUNK_WIDTH - 1)
+            return false;
+        else return true;
+
     }
 
 
 
-    void addVoxelDataToChunk(Vector3 position)
+    void addVoxelDataToChunk(Vector3 pos)
     {
         for (int i = 0; i < 6; i++)
         {
-            if(!checkVoxel(position+VoxelData.faceChecks[i]))
+            if(!checkVoxel(pos + VoxelData.faceChecks[i]))
             {
-                byte blockId = voxelMap[(int)position.x, (int)position.y, (int)position.z];
+                byte blockId = voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
 
-                vertices.Add(position + VoxelData.cubeVoxelVertices[VoxelData.voxelTriangles[i, 0]]);
-                vertices.Add(position + VoxelData.cubeVoxelVertices[VoxelData.voxelTriangles[i, 1]]);
-                vertices.Add(position + VoxelData.cubeVoxelVertices[VoxelData.voxelTriangles[i, 2]]);
-                vertices.Add(position + VoxelData.cubeVoxelVertices[VoxelData.voxelTriangles[i, 3]]);
+                vertices.Add(pos + VoxelData.cubeVoxelVertices[VoxelData.voxelTriangles[i, 0]]);
+                vertices.Add(pos + VoxelData.cubeVoxelVertices[VoxelData.voxelTriangles[i, 1]]);
+                vertices.Add(pos + VoxelData.cubeVoxelVertices[VoxelData.voxelTriangles[i, 2]]);
+                vertices.Add(pos + VoxelData.cubeVoxelVertices[VoxelData.voxelTriangles[i, 3]]);
                 addTexture(BlockTypes.blockTypes[blockId].getTextureId(i));
                 triangles.Add(vertexIndex);
                 triangles.Add(vertexIndex+1);
@@ -132,6 +151,17 @@ public class Chunk
         uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y));
         uvs.Add(new Vector2(x + VoxelData.normalizedBlockTextureSize, y + VoxelData.normalizedBlockTextureSize));
     }
+
+    public bool isActive
+    {
+        get { return chunkObject.activeSelf; }
+        set { chunkObject.SetActive(value); }
+    }
+
+    public Vector3 position
+    {
+        get { return chunkObject.transform.position; }
+    }
 }
 
 public class ChunkCoordinates
@@ -143,5 +173,12 @@ public class ChunkCoordinates
     {
         this.x = x;
         this.z = z;
+    }
+
+    public bool Equals(ChunkCoordinates other)
+    {
+        if (other == null) return false;
+        if (other.x == x && other.z == z) return true;
+        return false;
     }
 }

@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "displayName": "potion",
+      "icon": "potion_de_soin.jpeg",
+      "maxQuantity": 16
+    },
+    {
+      "id": 2,
+      "displayName": "sword",
+      "icon": "sword.jpeg",
+      "maxQuantity": 1
+    }
+  ]
+}
