@@ -6,33 +6,56 @@ using Unity.Netcode;
 public class NetworkPlayer : NetworkBehaviour
 {
     public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
+    public NetworkVariable<Quaternion> Rotation = new NetworkVariable<Quaternion>();
 
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
         {
-            Move();
-        }
-    }
-
-    public void Move()
-    {
-        if (NetworkManager.Singleton.IsServer)
-        {
-            var randomPosition = GetRandomPositionOnPlane();
-            transform.position = randomPosition;
-            Position.Value = randomPosition;
+            GetComponent<PlayerPrefabScript>().InitCameras();
+            InitPosition();
         }
         else
         {
-            SubmitPositionRequestServerRpc();
+            GetComponent<PlayerPrefabScript>().DestroyControllers();
+        }
+    }
+
+    public void InitPosition()
+    {
+        var initialPosition = GetRandomPositionOnPlane();
+        transform.position = initialPosition;
+
+        if (NetworkManager.Singleton.IsServer)
+        {
+            Position.Value = initialPosition;
+        }
+        else
+        {
+            SubmitPositionRequestServerRpc(transform.position, transform.rotation);
         }
     }
 
     [ServerRpc]
-    void SubmitPositionRequestServerRpc(ServerRpcParams rpcParams = default)
+    void SubmitPositionRequestServerRpc(Vector3 newPos, Quaternion newRot)
     {
-        Position.Value = GetRandomPositionOnPlane();
+        SetNetworkParams(newPos, newRot);
+    }
+
+    void Update()
+    {
+        if (IsOwner)
+        {
+            if (IsServer)
+                SetNetworkParams(transform.position, transform.rotation);
+            else
+                SubmitPositionRequestServerRpc(transform.position, transform.rotation);
+        }
+        else
+        {
+            SetLocalParams();
+        }
+
     }
 
     static Vector3 GetRandomPositionOnPlane()
@@ -40,8 +63,15 @@ public class NetworkPlayer : NetworkBehaviour
         return new Vector3(Random.Range(-3f, 3f), 1f, Random.Range(-3f, 3f));
     }
 
-    void Update()
+    private void SetNetworkParams(Vector3 newPos, Quaternion newRot)
+    {
+        Position.Value = newPos;
+        Rotation.Value = newRot;
+    }
+
+    private void SetLocalParams()
     {
         transform.position = Position.Value;
+        transform.rotation = Rotation.Value;
     }
 }
