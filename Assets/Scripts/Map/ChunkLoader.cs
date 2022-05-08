@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ChunkLoader : MonoBehaviour
 {
+    public int seed = 0;
+    public BiomeAttributes biome;
+
     public Transform player;
     public Vector3 spawnPosition;
 
@@ -16,7 +19,9 @@ public class ChunkLoader : MonoBehaviour
 
     private void Start()
     {
-        spawnPosition = new Vector3((VoxelData.WORLD_SIZE_IN_CHUNKS*VoxelData.CHUNK_HEIGHT) / 2, VoxelData.CHUNK_HEIGHT, (VoxelData.WORLD_SIZE_IN_CHUNKS*VoxelData.CHUNK_WIDTH) / 2);
+        Random.InitState(seed);
+
+        spawnPosition = new Vector3((VoxelData.WORLD_SIZE_IN_CHUNKS*VoxelData.CHUNK_HEIGHT) / 2, 2f, (VoxelData.WORLD_SIZE_IN_CHUNKS*VoxelData.CHUNK_WIDTH) / 2);
         generateWorld();
         playerLastChunkCoords = getChunkCoordinatesFromVector3(player.position);
     }
@@ -44,14 +49,47 @@ public class ChunkLoader : MonoBehaviour
 
     public byte getVoxel(Vector3 pos)
     {
-        if (pos.x < 0 || pos.x > VoxelData.WORLD_SIZE_IN_VOXELS - 1 || pos.y < 0 || pos.y > VoxelData.CHUNK_HEIGHT - 1 || pos.z < 0 || pos.z > VoxelData.WORLD_SIZE_IN_VOXELS - 1)
+        int yPos = Mathf.FloorToInt(pos.y);
+
+        if (!isVoxelInWorld(pos)) return 0; //Return un bloc d'air
+        if (yPos == 0) return 1; //Return le bloc de la couche 0
+
+
+
+        int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.terrainScale)) + biome.solidGroundHeight;
+        byte voxelValue;
+
+        if (yPos == terrainHeight)
+        {
+            voxelValue = 3; //Stone
+        }
+        else if (yPos < terrainHeight && yPos > terrainHeight - 4)
+        {
+            voxelValue = 4; //Dirt
+        }
+        else if (yPos > terrainHeight)
+        {
             return 0;
-        if (pos.y < 1)
-            return 1;
-        else if (pos.y == VoxelData.CHUNK_HEIGHT - 1)
-            return 3;
+        }
         else
-            return 2;
+        {
+            voxelValue = 2;
+        }
+
+        if(voxelValue == 2)
+        {
+            foreach (Lode lode in biome.lodes)
+            {
+                if(yPos > lode.minHeight && yPos < lode.maxHeight)
+                {
+                    if(Noise.Get3DPerlin(pos, lode.noiseOffset, lode.scale, lode.threshold))
+                    {
+                        voxelValue = lode.blockID;
+                    }
+                }
+            }
+        }
+        return voxelValue;
     }
 
     public ChunkCoordinates getChunkCoordinatesFromVector3(Vector3 pos)
@@ -64,7 +102,7 @@ public class ChunkLoader : MonoBehaviour
     void checkViewDistance()
     {
         ChunkCoordinates coords = getChunkCoordinatesFromVector3(player.position);
-        List<ChunkCoordinates> previouslyActiveChunks = new List<ChunkCoordinates>();
+        List<ChunkCoordinates> previouslyActiveChunks = new List<ChunkCoordinates>(activeChunks);
 
         for (int x = coords.x - VoxelData.RENDER_DISTANCE_IN_CHUNKS; x < coords.x + VoxelData.RENDER_DISTANCE_IN_CHUNKS; x++)
         {
