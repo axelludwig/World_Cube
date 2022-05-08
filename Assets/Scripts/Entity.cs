@@ -11,6 +11,7 @@ public abstract class Entity
     public int moveSpeed;
     public int experience;
     public int level;
+    public Inventory inventory;
 
     enum Teams
     {

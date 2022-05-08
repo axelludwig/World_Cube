@@ -32,7 +32,6 @@ public class Inventory
                 inventoryItem.quantity =
                     inventoryItem.quantity - number < 0
                     ? 0 : inventoryItem.quantity - number;
-
             }
         }
     }
@@ -40,5 +39,13 @@ public class Inventory
     public List<Item> getInventory()
     {
         return this.itemsList;
+    }
+
+    public int GetQuantity(int id)
+    {
+        var inventoryItem = itemsList.FirstOrDefault(item => item.data.id == id);
+        if (inventoryItem != null)
+            return inventoryItem.quantity;
+        return 0;
     }
 }
