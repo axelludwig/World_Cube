@@ -7,7 +7,7 @@ using System.Linq;
 public class ItemManager : MonoBehaviour
 {
     private static ItemManager _instance;
-    public static ItemData[] loadedItems;
+    public static List<ItemData> loadedItems;
 
     public static ItemManager Instance { get { return _instance; } }
     private void Awake()
@@ -24,21 +24,37 @@ public class ItemManager : MonoBehaviour
 
     public static ItemData getItem(int id)
     {
-        return loadedItems.SingleOrDefault(item => item.id == id);
+        return loadedItems.SingleOrDefault(item => item.Id == id);
     }
 
     public static ItemData getItem(string displayName)
     {
-        return loadedItems.SingleOrDefault(item => item.displayName == displayName);
+        return loadedItems.SingleOrDefault(item => item.DisplayName == displayName);
     }
 
-    private static void Start()
+    private void Start()
     {
         var jsonString = readTextFile("Assets/Scripts/Items/items.json");
-        Debug.Log(jsonString);
-        loadedItems = JsonHelper.FromJson<ItemData>(jsonString);
+        loadedItems = new List<ItemData>();
+
+        var genericItems = JsonHelper.FromJson<ItemData>(jsonString);
+        foreach (ItemData genericItem in genericItems)
+        {
+            switch (genericItem.ItemClass)
+            {
+                case "Weapon":
+                    loadedItems.Add(new Weapon(genericItem));
+                    break;
+                case "Equipment":
+                    loadedItems.Add(new Equipment(genericItem));
+                    break;
+                case "Consumable":
+                    loadedItems.Add(new Consumable(genericItem));
+                    break;
+            }
+        }
     }
-    private static string readTextFile(string file_path)
+    private string readTextFile(string file_path)
     {
         return File.ReadAllText(file_path);
     }

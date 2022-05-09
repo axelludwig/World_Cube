@@ -44,7 +44,7 @@
                 {
                     "name": "Inventory",
                     "type": "Button",
-                    "id": "8d81c4ce-4baa-48ff-86af-c896c625a4a2",
+                    "id": "82b74d6a-ed14-4f35-b0c5-92949e6902f6",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -230,7 +230,7 @@
                 },
                 {
                     "name": "",
-                    "id": "1edb9bfd-2bc6-425d-bbaf-611328964b0e",
+                    "id": "2de1145c-e5be-41f0-87fc-f8abe5b31470",
                     "path": "<Keyboard>/i",
                     "interactions": "",
                     "processors": "",

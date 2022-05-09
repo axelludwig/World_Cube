@@ -12,6 +12,7 @@ namespace StarterAssets
 		public Vector2 look;
 		public bool jump;
 		public bool sprint;
+		public bool inventory;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -43,6 +44,11 @@ namespace StarterAssets
 		{
 			SprintInput(value.isPressed);
 		}
+
+		public void OnInventory()
+		{
+			InventoryInput(true);
+		}
 #endif
 
 
@@ -64,6 +70,12 @@ namespace StarterAssets
 		public void SprintInput(bool newSprintState)
 		{
 			sprint = newSprintState;
+		}
+
+		public void InventoryInput(bool newInventoryState)
+		{
+			Debug.LogWarning("ici");
+			inventory = newInventoryState;
 		}
 
 		private void OnApplicationFocus(bool hasFocus)

@@ -12,7 +12,7 @@ public class Inventory
         var itemData = ItemManager.getItem(id);
         if (itemData != null)
         {
-            var inventoryItem = itemsList.FirstOrDefault(item => item.data.id == id);
+            var inventoryItem = itemsList.FirstOrDefault(item => item.data.Id == id);
             if (inventoryItem != null) inventoryItem.quantity += number;
             else
             {
@@ -26,7 +26,7 @@ public class Inventory
         var itemData = ItemManager.getItem(id);
         if (itemData != null)
         {
-            var inventoryItem = itemsList.FirstOrDefault(item => item.data.id == id);
+            var inventoryItem = itemsList.FirstOrDefault(item => item.data.Id == id);
             if (inventoryItem != null)
             {
                 inventoryItem.quantity =
@@ -43,7 +43,7 @@ public class Inventory
 
     public int GetQuantity(int id)
     {
-        var inventoryItem = itemsList.FirstOrDefault(item => item.data.id == id);
+        var inventoryItem = itemsList.FirstOrDefault(item => item.data.Id == id);
         if (inventoryItem != null)
             return inventoryItem.quantity;
         return 0;

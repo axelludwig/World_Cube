@@ -1,16 +1,43 @@
 {
-  "items": [
+  "Items": [
     {
-      "id": 1,
-      "displayName": "potion",
-      "icon": "potion_de_soin.jpeg",
-      "maxQuantity": 16
+      "Id": 1,
+      "DisplayName": "Potion de mini soin",
+      "Icon": "potion_de_soin.jpeg",
+      "MaxQuantity": 16,
+      "ItemType": "Potion",
+      "ItemClass": "Consumable",
+      "Stats": [
+        {
+          "RegenPerSecond": 1,
+          "EffectDuration":  30
+        }
+      ]
     },
     {
-      "id": 2,
-      "displayName": "sword",
-      "icon": "sword.jpeg",
-      "maxQuantity": 1
+      "Id": 2,
+      "DisplayName": "sword",
+      "Icon": "sword.jpeg",
+      "MaxQuantity": 1,
+      "ItemClass": "Weapon",
+      "ItemType": "Sword",
+      "Stats": {
+        "Damage": 10,
+        "AttackSpeed": 1.5
+      }
+    },
+    {
+      "Id": 3,
+      "DisplayName": "chestplate",
+      "Icon": "sword.jpeg",
+      "MaxQuantity": 1,
+      "ItemClass": "Equipment",
+      "ItemType": "Chestplate",
+      "Stats": {
+        "Armor": 10,
+        "Thorns":  1.1
+      }
+
     }
   ]
 }

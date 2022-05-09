@@ -12,8 +12,9 @@ public abstract class Entity
     public int experience;
     public int level;
     public Inventory inventory;
+    public TeamType team;
 
-    enum Teams
+    public enum TeamType
     {
         Players,
         Biome1,
