@@ -20,24 +20,37 @@ public class Chunk
 
     ChunkLoader chunkLoader;
 
-    public Chunk(ChunkCoordinates coordinates, ChunkLoader chunkLoader)
+    private bool _isActive;
+    public bool isVoxelMapPopulated = false;
+
+    public Chunk(ChunkCoordinates coordinates, ChunkLoader chunkLoader, bool generateOnLoad)
     {
         this.chunkLoader = chunkLoader;
         this.coordinates = coordinates;
+        isActive = true;
+
+        if(generateOnLoad)
+        {
+            Init();
+        }
+
+    }
+
+    public void Init()
+    {
         chunkObject = new GameObject();
-        chunkObject.name = "Chunk";
+        chunkObject.name = "Chunk " + coordinates.x + ", " + coordinates.z;
         meshFilter = chunkObject.AddComponent<MeshFilter>();
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
         meshCollider = chunkObject.AddComponent<MeshCollider>();
         meshRenderer.material = chunkLoader.material;
+        meshCollider.sharedMesh = meshFilter.mesh;
         chunkObject.transform.SetParent(chunkLoader.transform);
-        chunkObject.transform.position = new Vector3(coordinates.x * VoxelData.CHUNK_WIDTH, 0f, coordinates.z * VoxelData.CHUNK_WIDTH) ;
+        chunkObject.transform.position = new Vector3(coordinates.x * VoxelData.CHUNK_WIDTH, 0f, coordinates.z * VoxelData.CHUNK_WIDTH);
 
         populateVoxelMap();
         createMeshData();
         createMesh();
-
-        meshCollider.sharedMesh = meshFilter.mesh;
     }
 
     void populateVoxelMap()
@@ -53,6 +66,7 @@ public class Chunk
                 }
             }
         }
+        isVoxelMapPopulated = true;
 
     }
     void createMeshData()
@@ -75,14 +89,14 @@ public class Chunk
     /// <summary>
     /// Vérifie si le voxel aux coordonnées données est solide ou non
     /// </summary>
-    bool checkVoxel(Vector3 voxel)
+    bool checkVoxel(Vector3 pos)
     {
-        int x = Mathf.FloorToInt(voxel.x);
-        int y = Mathf.FloorToInt(voxel.y);
-        int z = Mathf.FloorToInt(voxel.z);
+        int x = Mathf.FloorToInt(pos.x);
+        int y = Mathf.FloorToInt(pos.y);
+        int z = Mathf.FloorToInt(pos.z);
         if (!IsVoxelInChunk(x, y, z))
         {
-            return BlockTypes.blockTypes[chunkLoader.getVoxel(voxel + position)].isSolid;
+            return chunkLoader.CheckForVoxel(pos + position);
         }
         else
         {
@@ -97,6 +111,18 @@ public class Chunk
             return false;
         else return true;
 
+    }
+
+    public byte GetVoxelFromGlobalVector3(Vector3 pos)
+    {
+        int xCheck = Mathf.FloorToInt(pos.x);
+        int yCheck = Mathf.FloorToInt(pos.y);
+        int zCheck = Mathf.FloorToInt(pos.z);
+
+        xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
+        zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
+
+        return voxelMap[xCheck, yCheck, zCheck];
     }
 
 
@@ -154,8 +180,14 @@ public class Chunk
 
     public bool isActive
     {
-        get { return chunkObject.activeSelf; }
-        set { chunkObject.SetActive(value); }
+        get { return _isActive; }
+        set {
+            _isActive = value;
+            if(chunkObject != null)
+            {
+                chunkObject.SetActive(value); 
+            }
+        }
     }
 
     public Vector3 position
@@ -169,10 +201,25 @@ public class ChunkCoordinates
     public int x;
     public int z;
 
+    public ChunkCoordinates()
+    {
+        x = 0;
+        z = 0;
+    }
+
     public ChunkCoordinates(int x, int z)
     {
         this.x = x;
         this.z = z;
+    }
+
+    public ChunkCoordinates(Vector3 pos)
+    {
+        int xCheck = Mathf.FloorToInt(pos.x);
+        int zCheck = Mathf.FloorToInt(pos.z);
+
+        x = xCheck / VoxelData.CHUNK_WIDTH;
+        z = zCheck / VoxelData.CHUNK_WIDTH;
     }
 
     public bool Equals(ChunkCoordinates other)
