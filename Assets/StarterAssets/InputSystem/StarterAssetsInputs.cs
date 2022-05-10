@@ -47,12 +47,10 @@ namespace StarterAssets
 
 		public void OnInventory()
 		{
-			InventoryInput(true);
+			inventory = !inventory;
+			InventoryCanvasManager.Instance.ShowInventory(inventory);
 		}
-
 #endif
-
-
 		public void MoveInput(Vector2 newMoveDirection)
 		{
 			move = newMoveDirection;
@@ -73,11 +71,11 @@ namespace StarterAssets
 			sprint = newSprintState;
 		}
 
-		public void InventoryInput(bool newInventoryState)
-		{
-			Debug.LogWarning("ici");
-			inventory = newInventoryState;
-		}
+		//public void InventoryInput(bool newInventoryState)
+		//{
+		//	inventory = newInventoryState;
+		//	Debug.Log(inventory); 
+		//}
 
 
 		private void OnApplicationFocus(bool hasFocus)

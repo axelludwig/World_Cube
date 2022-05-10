@@ -7,12 +7,22 @@ public class Inventory
 {
     private List<Item> itemsList;
 
+    public Inventory()
+    {
+        itemsList = new List<Item>();
+    }
+
     public void AddItem(int id, int number)
     {
         var itemData = ItemManager.getItem(id);
+        this.AddItem(itemData, number);
+    }
+
+    public void AddItem(ItemData itemData, int number)
+    {
         if (itemData != null)
         {
-            var inventoryItem = itemsList.FirstOrDefault(item => item.data.Id == id);
+            var inventoryItem = itemsList.FirstOrDefault(item => item.data == itemData);
             if (inventoryItem != null) inventoryItem.quantity += number;
             else
             {
