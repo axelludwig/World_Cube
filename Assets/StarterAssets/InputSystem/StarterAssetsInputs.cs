@@ -49,6 +49,7 @@ namespace StarterAssets
 		{
 			InventoryInput(true);
 		}
+
 #endif
 
 
@@ -77,6 +78,7 @@ namespace StarterAssets
 			Debug.LogWarning("ici");
 			inventory = newInventoryState;
 		}
+
 
 		private void OnApplicationFocus(bool hasFocus)
 		{
