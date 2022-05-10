@@ -49,8 +49,8 @@ public class Chunk
         chunkObject.transform.position = new Vector3(coordinates.x * VoxelData.CHUNK_WIDTH, 0f, coordinates.z * VoxelData.CHUNK_WIDTH);
 
         populateVoxelMap();
-        createMeshData();
-        createMesh();
+        UpdateChunk();
+        
     }
 
     void populateVoxelMap()
@@ -69,8 +69,10 @@ public class Chunk
         isVoxelMapPopulated = true;
 
     }
-    void createMeshData()
+    void UpdateChunk()
     {
+        ClearMeshData();
+
         for (int y = 0; y < VoxelData.CHUNK_HEIGHT; y++)
         {
             for (int x = 0; x < VoxelData.CHUNK_WIDTH; x++)
@@ -79,9 +81,53 @@ public class Chunk
                 {
                     if(BlockTypes.blockTypes[voxelMap[x, y, z]].isSolid)
                     {
-                        addVoxelDataToChunk(new Vector3(x, y, z));
+                        UpdateMeshData(new Vector3(x, y, z));
                     }
                 }
+            }
+        }
+
+        createMesh();
+    }
+
+    void ClearMeshData()
+    {
+        vertexIndex = 0;
+        vertices.Clear();
+        triangles.Clear();
+        uvs.Clear();
+    }
+
+    public void DestroyVoxel(Vector3 pos)
+    {
+        EditVoxel(pos, 0);
+    }
+
+    public void EditVoxel(Vector3 pos, byte newID)
+    {
+        int xCheck = Mathf.FloorToInt(pos.x);
+        int yCheck = Mathf.FloorToInt(pos.y);
+        int zCheck = Mathf.FloorToInt(pos.z);
+
+        xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
+        zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
+
+        voxelMap[xCheck, yCheck, zCheck] = newID;
+
+        UpdateSurroundingVoxels(xCheck, yCheck, zCheck);
+
+        UpdateChunk();
+    }
+
+    void UpdateSurroundingVoxels(int x, int y, int z)
+    {
+        Vector3 thisVoxel = new Vector3(x, y, z);
+        for (int i = 0; i < 6; i++)
+        {
+            Vector3 currentVoxel = thisVoxel + VoxelData.faceChecks[i];
+            if (!IsVoxelInChunk((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z))
+            {
+                chunkLoader.getChunkFromVector3(thisVoxel + position).UpdateChunk();
             }
         }
     }
@@ -127,7 +173,7 @@ public class Chunk
 
 
 
-    void addVoxelDataToChunk(Vector3 pos)
+    void UpdateMeshData(Vector3 pos)
     {
         for (int i = 0; i < 6; i++)
         {

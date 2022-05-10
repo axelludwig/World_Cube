@@ -141,6 +141,13 @@ public class ChunkLoader : MonoBehaviour
         return new ChunkCoordinates(x, z);
     }
 
+    public Chunk getChunkFromVector3(Vector3 pos)
+    {
+        int x = Mathf.FloorToInt(pos.x / VoxelData.CHUNK_WIDTH);
+        int z = Mathf.FloorToInt(pos.z / VoxelData.CHUNK_WIDTH);
+        return chunks[x, z];
+    }
+
     void checkViewDistance()
     {
         ChunkCoordinates coords = getChunkCoordinatesFromVector3(player.position);
