@@ -17,7 +17,6 @@ public class PlayerPrefabScript : MonoBehaviour
     {
         Destroy(GetComponent<ThirdPersonController>());
         Destroy(GetComponent<PlayerInput>());
-        Destroy(GetComponent<CharacterController>());
     }
 
     public void InitCameras()

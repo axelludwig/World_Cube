@@ -19,6 +19,8 @@ public class NetworkPlayer : NetworkBehaviour
         {
             GetComponent<PlayerPrefabScript>().DestroyControllers();
         }
+
+        gameObject.name = "Player prefab";
     }
 
     public void InitPosition()
