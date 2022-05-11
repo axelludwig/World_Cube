@@ -75,7 +75,7 @@ public class NetworkPlayer : NetworkBehaviour
 
     private void SetLocalParams()
     {
-        transform.position = Position.Value;
+        transform.position = Vector3.Lerp(transform.position, Position.Value, 50f * Time.deltaTime);
         transform.rotation = Rotation.Value;
     }
 }

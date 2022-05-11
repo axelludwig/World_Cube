@@ -618,8 +618,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1445535909}
   m_HandleRect: {fileID: 1445535908}
   m_Direction: 2
-  m_Value: 1.0000004
-  m_Size: 0.66666675
+  m_Value: 1
+  m_Size: 0.6666667
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1055,7 +1055,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seed: 0
   biome: {fileID: 11400000, guid: 0357d04334c0a4e4b91cf55f1e14ad4d, type: 2}
-  spawnPosition: {x: 0, y: 0, z: 0}
   material: {fileID: 2100000, guid: a1bc626440200ba4abc6ac70a9ccc61d, type: 2}
   debugScreen: {fileID: 728816762}
 --- !u!4 &786301565
