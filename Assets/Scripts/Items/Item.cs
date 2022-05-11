@@ -14,7 +14,7 @@ public class Item
     }
     public Item(int itemID, int quantity)
     {
-        this.data = ItemManager.getItem(itemID);
+        this.data = ItemManager.Instance.getItem(itemID);
         this.quantity = quantity;
     }
 }

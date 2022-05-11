@@ -2189,6 +2189,7 @@ GameObject:
   - component: {fileID: 3916226682917048620}
   - component: {fileID: 6055897883097534928}
   - component: {fileID: -2766498712212903136}
+  - component: {fileID: 3796091369150667208}
   m_Layer: 8
   m_Name: PlayerPrefab
   m_TagString: Player
@@ -2487,6 +2488,25 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 274649b0e221539409070ebf6c18918b, type: 3}
   - {fileID: 8300000, guid: a3194b8bbc96ef84fab1f98f4b7dae3e, type: 3}
   FootstepAudioVolume: 0.5
+--- !u!114 &3796091369150667208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8497240093536864150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c1cd196d6ab9e74ca170cbb667e55e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  base_maxhp: 0
+  base_moveSpeed: 0
+  hp: 0
+  moveSpeed: 0
+  experience: 0
+  level: 0
+  team: 0
 --- !u!1 &8531290269948081098
 GameObject:
   m_ObjectHideFlags: 0
