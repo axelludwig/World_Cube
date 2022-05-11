@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,7 +9,7 @@ public class ChunkLoader : MonoBehaviour
     public int seed = 0;
     public BiomeAttributes biome;
 
-    public Transform player;
+    public static Transform player;
     public Vector3 spawnPosition;
 
     public Material material;
@@ -23,31 +24,33 @@ public class ChunkLoader : MonoBehaviour
 
     public GameObject debugScreen;
 
+
     private void Start()
     {
         Random.InitState(seed);
-
         spawnPosition = new Vector3((VoxelData.WORLD_SIZE_IN_CHUNKS*VoxelData.CHUNK_WIDTH) / 2, 90f, (VoxelData.WORLD_SIZE_IN_CHUNKS*VoxelData.CHUNK_WIDTH) / 2);
         generateWorld();
-        playerLastChunkCoords = getChunkCoordinatesFromVector3(player.position);
     }
 
     private void Update()
     {
-        playerChunkCoordinates = getChunkCoordinatesFromVector3(player.position);
-        if(!playerChunkCoordinates.Equals(playerLastChunkCoords))
+        if(player != null)
         {
-            checkViewDistance();
-        }
+            playerChunkCoordinates = getChunkCoordinatesFromVector3(player.position);
+            if(!playerChunkCoordinates.Equals(playerLastChunkCoords))
+            {
+                checkViewDistance();
+            }
 
-        if(chunksToCreate.Count > 0 && !isCreatingChunks)
-        {
-            StartCoroutine("CreateChunks");
-        }
+            if(chunksToCreate.Count > 0 && !isCreatingChunks)
+            {
+                StartCoroutine("CreateChunks");
+            }
 
-        if(Keyboard.current.f3Key.wasPressedThisFrame)
-        {
-            debugScreen.SetActive(!debugScreen.activeSelf);
+            if(Keyboard.current.f3Key.wasPressedThisFrame)
+            {
+                debugScreen.SetActive(!debugScreen.activeSelf);
+            }
         }
     }
 

@@ -44,13 +44,13 @@ public class Chunk
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
         meshCollider = chunkObject.AddComponent<MeshCollider>();
         meshRenderer.material = chunkLoader.material;
-        meshCollider.sharedMesh = meshFilter.mesh;
         chunkObject.transform.SetParent(chunkLoader.transform);
         chunkObject.transform.position = new Vector3(coordinates.x * VoxelData.CHUNK_WIDTH, 0f, coordinates.z * VoxelData.CHUNK_WIDTH);
 
         populateVoxelMap();
         UpdateChunk();
         
+        meshCollider.sharedMesh = meshFilter.mesh;
     }
 
     void populateVoxelMap()

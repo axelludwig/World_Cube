@@ -14,6 +14,7 @@ public class NetworkPlayer : NetworkBehaviour
         {
             GetComponent<PlayerPrefabScript>().InitCameras();
             InitPosition();
+            ChunkLoader.player = gameObject.transform;
         }
         else
         {
