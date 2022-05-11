@@ -5,8 +5,10 @@ using Unity.Netcode;
 
 public class NetworkPlayer : NetworkBehaviour
 {
-    public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
-    public NetworkVariable<Quaternion> Rotation = new NetworkVariable<Quaternion>();
+    private NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
+    private NetworkVariable<Quaternion> Rotation = new NetworkVariable<Quaternion>();
+
+    public GameObject TestEnnemy;
 
     public override void OnNetworkSpawn()
     {
@@ -23,6 +25,12 @@ public class NetworkPlayer : NetworkBehaviour
         }
 
         gameObject.name = "Player prefab";
+
+        if (IsServer)
+        {
+            GameObject go = Instantiate(TestEnnemy, new Vector3(800, 80, 800), Quaternion.identity);
+            go.GetComponent<NetworkObject>().Spawn();
+        }
     }
 
     public void InitPosition()

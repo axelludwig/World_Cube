@@ -2431,10 +2431,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6940ed1ebca12d04f9e90d52493e9315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Position:
-    m_InternalValue: {x: 0, y: 0, z: 0}
-  Rotation:
-    m_InternalValue: {x: 0, y: 0, z: 0, w: 0}
+  TestEnnemy: {fileID: 3417403038408892884, guid: 7cb49f586e987a64c9471205f94c8205, type: 3}
 --- !u!114 &3916226682917048620
 MonoBehaviour:
   m_ObjectHideFlags: 0
