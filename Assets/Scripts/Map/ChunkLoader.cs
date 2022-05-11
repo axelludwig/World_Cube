@@ -10,7 +10,7 @@ public class ChunkLoader : MonoBehaviour
     public BiomeAttributes biome;
 
     public static Transform player;
-    public Vector3 spawnPosition;
+    public static Vector3 spawnPosition;
 
     public Material material;
 
@@ -65,7 +65,6 @@ public class ChunkLoader : MonoBehaviour
                 activeChunks.Add(new ChunkCoordinates(x, z));
             }
         }
-        player.position = spawnPosition;
     }
 
     IEnumerator CreateChunks()
