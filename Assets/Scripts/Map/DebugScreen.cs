@@ -25,7 +25,7 @@ public class DebugScreen : MonoBehaviour
 
 
         debugText += "\n" + fps + " fps";
-        debugText += "\nCoordonnées gros : " + (int)chunkLoader.player.transform.position.x + "," + (int)chunkLoader.player.transform.position.y + "," + (int)chunkLoader.player.transform.position.z;
+        debugText += "\nCoordonnées gros : " + (int)ChunkLoader.player.transform.position.x + "," + (int)ChunkLoader.player.transform.position.y + "," + (int)ChunkLoader.player.transform.position.z;
         text.text = debugText;
     }
 
