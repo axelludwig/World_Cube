@@ -67,7 +67,7 @@ public class NetworkPlayer : NetworkBehaviour
 
     private void SetNetworkParams(Vector3 newPos, Quaternion newRot)
     {
-        Position.Value = newPos;
+        Position.Value = Vector3.Lerp(transform.position, newPos, 50f * Time.deltaTime);
         Rotation.Value = newRot;
     }
 
