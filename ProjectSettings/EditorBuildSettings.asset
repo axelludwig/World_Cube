@@ -5,11 +5,14 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/Scenes/Scene Guidon.unity
+  - enabled: 0
+    path: Assets/Scenes/Scene Guidon OLD.unity
     guid: 005b2a86244bdc54599edb2a312857e8
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Medecine.unity
     guid: feab14d69e272744295abaed877f198c
+  - enabled: 1
+    path: Assets/Scenes/Scene Guidon.unity
+    guid: 81249e90e31a2fd4fb4b70a514af7c35
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7, type: 2}
