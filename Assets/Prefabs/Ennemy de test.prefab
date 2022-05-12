@@ -372,7 +372,7 @@ MonoBehaviour:
   moveSpeed: 5
   experience: 0
   level: 3
-  team: 0
+  team: 1
   AggroDistance: 30
 --- !u!114 &1739878019502945028
 MonoBehaviour:

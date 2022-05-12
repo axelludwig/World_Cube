@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -44,7 +45,7 @@ public class MonsterController : NetworkBehaviour
         var entities = FindObjectsOfType<Entity>();
         float minDistance = _entity.AggroDistance;
 
-        foreach (var entity in entities)
+        foreach (var entity in entities.Where(x => x.team != _entity.team))
         {
             GameObject gameObjectEntity = entity.gameObject;
             float distance = Vector3.Distance(gameObjectEntity.transform.position, transform.position);
