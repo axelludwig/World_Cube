@@ -55,7 +55,7 @@ public class Inventory
         }
     }
 
-    public List<Item> getInventory()
+    public List<Item> GetInventory()
     {
         return this.itemsList;
     }

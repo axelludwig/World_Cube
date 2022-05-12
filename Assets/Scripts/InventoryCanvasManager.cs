@@ -11,6 +11,10 @@ public class InventoryCanvasManager : MonoBehaviour
     private InventoryCanvasManager() { }
     public GameObject Panel;
     public TextMeshProUGUI Text;
+    public int MaxItemsPerLines;
+    public GameObject SpawnPoint;
+
+    public GameObject ItemPrefab;
 
     private static InventoryCanvasManager _instance;
 
@@ -26,20 +30,34 @@ public class InventoryCanvasManager : MonoBehaviour
         _instance = this;
 
         Text = Panel.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
+        BuildInventory();
         Panel.gameObject.SetActive(false);
+    }
+
+    public void BuildInventory()
+    {
+        var playerInventory = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().gameObject.GetComponent<Player>().Inventory.GetInventory();
+        if (playerInventory != null)
+        {
+            foreach (Item item in playerInventory)
+            {
+                Instantiate(ItemPrefab, SpawnPoint.transform);
+
+            }
+        }
     }
 
     public void ShowInventory(bool state)
     {
         Panel.gameObject.SetActive(state);
-        //NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().gameObject
-        //Debug()
+        //var t = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().gameObject.GetComponent<Player>().GetInventory();
+        //Debug.Log(t);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-       
+
     }
 
     // Update is called once per frame
