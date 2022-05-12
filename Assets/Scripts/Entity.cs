@@ -12,7 +12,6 @@ public abstract class Entity : NetworkBehaviour
     public int moveSpeed;
     public int experience;
     public int level;
-    public Inventory inventory;
     public TeamType team;
 
     public float AggroDistance = 30;
