@@ -134,5 +134,5 @@ MonoBehaviour:
   moveSpeed: 5
   experience: 0
   level: 3
-  team: 0
+  team: 1
   AggroDistance: 30
