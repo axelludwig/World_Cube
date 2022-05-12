@@ -14,8 +14,17 @@ public class Inventory
 
     public void AddItem(int id, int number)
     {
-        var itemData = ItemManager.getItem(id);
-        this.AddItem(itemData, number);
+        try
+        {
+            var itemData = ItemManager.Instance.getItem(id);
+            if (itemData != null)
+                this.AddItem(itemData, number);
+        }
+        catch (System.Exception)
+        {
+            Debug.Log("louuuuul l'instance du singleton et nulent là ??");
+            //throw;
+        }
     }
 
     public void AddItem(ItemData itemData, int number)
@@ -33,7 +42,7 @@ public class Inventory
 
     public void RemoveItem(int id, int number)
     {
-        var itemData = ItemManager.getItem(id);
+        var itemData = ItemManager.Instance.getItem(id);
         if (itemData != null)
         {
             var inventoryItem = itemsList.FirstOrDefault(item => item.data.Id == id);

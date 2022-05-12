@@ -4,33 +4,42 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 using TMPro;
+using Unity.Netcode;
 
 public class InventoryCanvasManager : MonoBehaviour
 {
+    private InventoryCanvasManager() { }
     public GameObject Panel;
     public TextMeshProUGUI Text;
 
     private static InventoryCanvasManager _instance;
 
-    public static InventoryCanvasManager Instance { get { return _instance; } }
+    public static InventoryCanvasManager Instance
+    {
+        get { return _instance; }
+        private set { _instance = value; }
+    }
     private void Awake()
     {
         if (_instance != null && _instance != this)
-            Destroy(this.gameObject);
-        else
-            _instance = this;
+            Destroy(gameObject);
+        _instance = this;
+
+        Text = Panel.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
+        Panel.gameObject.SetActive(false);
     }
 
     public void ShowInventory(bool state)
     {
-        this.gameObject.SetActive(state);
+        Panel.gameObject.SetActive(state);
+        //NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().gameObject
+        //Debug()
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        Text = gameObject.transform.Find("Panel/Text (TMP)").GetComponent<TextMeshProUGUI>();
-        this.gameObject.SetActive(false);
+       
     }
 
     // Update is called once per frame
