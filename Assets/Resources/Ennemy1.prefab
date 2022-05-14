@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3417403038408892883}
   - component: {fileID: 3417403038408892909}
   m_Layer: 0
-  m_Name: Ennemy de test
+  m_Name: Ennemy1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -135,4 +135,7 @@ MonoBehaviour:
   experience: 0
   level: 3
   team: 1
+  Range: 2
+  Damages: 3
   AggroDistance: 30
+  CastTime: 2

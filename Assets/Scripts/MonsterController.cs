@@ -10,14 +10,17 @@ public class MonsterController : NetworkBehaviour
     public NetworkVariable<Quaternion> Rotation = new NetworkVariable<Quaternion>();
 
     //This code must be executed SERVER SIDE only
-    private Entity _entity;
+    private Monster _entity;
 
     private GameObject _target;
+
+    public bool IsCasting = false;
+    private float _currentCastTime = 0;
 
     // Start is called before the first frame update
     void Awake()
     {
-        _entity = GetComponent<Entity>();
+        _entity = GetComponent<Monster>();
     }
 
     // Update is called once per frame
@@ -29,9 +32,34 @@ public class MonsterController : NetworkBehaviour
             return;
         }
 
-        transform.Translate(Vector3.Normalize(_target.transform.position - transform.position) * Time.fixedDeltaTime * _entity.moveSpeed);
+        if (IsCasting)
+        {
+            _currentCastTime -= Time.deltaTime;
+            if (_currentCastTime < 0)
+            {
+                IsCasting = false;
+            }
+            return;
+        }
+
+        transform.LookAt(_target.transform);
+
+        if (Vector3.Distance(transform.position, _target.transform.position) < _entity.Range)
+        {
+            StartCast();
+        }
+
+        transform.position += transform.forward * Time.deltaTime * _entity.moveSpeed;
 
         SetNetworkParams(transform.position, transform.rotation);
+    }
+
+    private void StartCast()
+    {
+        IsCasting = true;
+        _currentCastTime = _entity.CastTime;
+
+        _entity.DealDamage(_target.GetComponent<Entity>());
     }
 
     private void SetNetworkParams(Vector3 newPos, Quaternion newRot)

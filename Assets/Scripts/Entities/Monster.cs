@@ -4,5 +4,10 @@ using UnityEngine;
 
 public class Monster : Entity
 {
-    
+    public float CastTime;
+
+    public override void Die()
+    {
+
+    }
 }

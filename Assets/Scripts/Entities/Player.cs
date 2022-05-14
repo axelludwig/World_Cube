@@ -16,4 +16,9 @@ public class Player : Entity
     {
         return Inventory;
     }
+
+    public override void Die()
+    {
+
+    }
 }

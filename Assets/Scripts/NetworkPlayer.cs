@@ -8,8 +8,6 @@ public class NetworkPlayer : NetworkBehaviour
     private NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
     private NetworkVariable<Quaternion> Rotation = new NetworkVariable<Quaternion>();
 
-    public GameObject TestEnnemy;
-
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -24,12 +22,11 @@ public class NetworkPlayer : NetworkBehaviour
             GetComponent<PlayerPrefabScript>().DestroyControllers();
         }
 
-        gameObject.name = "Player prefab";
+        gameObject.name = "Player " + GetComponent<NetworkObject>().NetworkObjectId;
 
-        if (IsServer)
+        if (IsOwnedByServer)
         {
-            GameObject go = Instantiate(TestEnnemy, new Vector3(800, 80, 800), Quaternion.identity);
-            go.GetComponent<NetworkObject>().Spawn();
+            SpawnManager.InstantiateGameObject();
         }
     }
 
