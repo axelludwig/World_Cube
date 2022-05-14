@@ -47,12 +47,9 @@ public abstract class Entity : NetworkBehaviour
     {
         Debug.Log("SERVER : " + damages);
 
-        hp -= damages;
-
         GetDamagesClientRpc(damages, networkObjectId);
 
-
-        if (hp < 0)
+        if (hp - damages < 0)
         {
             Die();
         }
@@ -66,6 +63,11 @@ public abstract class Entity : NetworkBehaviour
         hp -= damages;
 
         healthDisplayer.RefreshHealthBar(hp);
+
+        if (IsServer)
+        {
+            //Check die
+        }
     }
 
     public abstract void Die();

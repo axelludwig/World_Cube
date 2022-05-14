@@ -10,7 +10,6 @@ public class SpawnManager : BaseSingleton<SpawnManager>
     // Start is called before the first frame update
     void Start()
     {
-
         GameObject go = Instantiate(Resources.Load<GameObject>("Ennemy1"), new Vector3(800, 80, 800), Quaternion.identity);
         go.GetComponent<NetworkObject>().Spawn();
         go.AddComponent<MonsterController>();

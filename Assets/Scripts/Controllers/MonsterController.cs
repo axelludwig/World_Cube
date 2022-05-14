@@ -4,10 +4,9 @@ using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
-public class MonsterController : NetworkBehaviour
+public class MonsterController : MonoBehaviour
 {
-    public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
-    public NetworkVariable<Quaternion> Rotation = new NetworkVariable<Quaternion>();
+    private NetworkMonster _networkMonster;
 
     //This code must be executed SERVER SIDE only
     private Monster _entity;
@@ -21,6 +20,7 @@ public class MonsterController : NetworkBehaviour
     void Awake()
     {
         _entity = GetComponent<Monster>();
+        _networkMonster = GetComponent<NetworkMonster>();
     }
 
     // Update is called once per frame
@@ -51,7 +51,7 @@ public class MonsterController : NetworkBehaviour
 
         transform.position += transform.forward * Time.deltaTime * _entity.moveSpeed;
 
-        SetNetworkParams(transform.position, transform.rotation);
+        _networkMonster.SetNetworkParams(transform.position, transform.rotation);
     }
 
     private void StartCast()
@@ -62,11 +62,7 @@ public class MonsterController : NetworkBehaviour
         _entity.DealDamage(_target.GetComponent<Entity>());
     }
 
-    private void SetNetworkParams(Vector3 newPos, Quaternion newRot)
-    {
-        Position.Value = Vector3.Lerp(transform.position, newPos, 50f * Time.deltaTime);
-        Rotation.Value = newRot;
-    }
+    
 
     public void SearchTarget()
     {

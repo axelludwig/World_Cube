@@ -21,7 +21,7 @@ public class BaseSingleton<T> : MonoBehaviour where T : MonoBehaviour
 					_instance = FindObjectOfType<T>();
 					if (_instance == null)
 					{
-						InstantiateGameObject();
+						Instantiate();
 					}
 				}
 
@@ -30,7 +30,7 @@ public class BaseSingleton<T> : MonoBehaviour where T : MonoBehaviour
 		}
 	}
 
-	public static void InstantiateGameObject()
+	public static void Instantiate()
     {
 		GameObject go = new GameObject(typeof(T).ToString());
 		_instance = go.AddComponent<T>();
