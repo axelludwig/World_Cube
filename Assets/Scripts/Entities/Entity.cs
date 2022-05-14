@@ -19,6 +19,13 @@ public abstract class Entity : NetworkBehaviour
 
     public float AggroDistance = 30;
 
+    private EntityHealthDisplayManager healthDisplayer;
+
+    private void Awake()
+    {
+        healthDisplayer = GetComponent<EntityHealthDisplayManager>();
+    }
+
     public enum TeamType
     {
         Players,
@@ -57,6 +64,8 @@ public abstract class Entity : NetworkBehaviour
         Debug.Log("CLIENT : " + damages);
 
         hp -= damages;
+
+        healthDisplayer.RefreshHealthBar(hp);
     }
 
     public abstract void Die();

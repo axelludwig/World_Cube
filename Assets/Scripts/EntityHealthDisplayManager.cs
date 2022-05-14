@@ -1,17 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class EnemyHealthDisplayManager : MonoBehaviour
+public class EntityHealthDisplayManager : MonoBehaviour
 {
     public GameObject Panel;
-    public TextMeshProUGUI Text;
+    private TextMeshProUGUI Text;
+
     // Start is called before the first frame update
     void Start()
     {
         Text = Panel.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
-        var health = gameObject.GetComponent<Monster>().hp;
+        var health = gameObject.GetComponent<Entity>().hp;
         RefreshHealthBar(health);
     }
 
@@ -21,8 +23,9 @@ public class EnemyHealthDisplayManager : MonoBehaviour
         
     }
 
-    public void RefreshHealthBar(int health)
+    public void RefreshHealthBar(float health)
     {
-        Text.text = health.ToString();
+        int healthInt = Convert.ToInt32(health);
+        Text.text = healthInt.ToString();
     }
 }
