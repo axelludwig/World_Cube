@@ -1085,7 +1085,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seed: 0
   biome: {fileID: 11400000, guid: 0357d04334c0a4e4b91cf55f1e14ad4d, type: 2}
-  spawnPosition: {x: 0, y: 0, z: 0}
   material: {fileID: 2100000, guid: a1bc626440200ba4abc6ac70a9ccc61d, type: 2}
   debugScreen: {fileID: 728816762}
 --- !u!4 &786301565
@@ -1709,6 +1708,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Panel: {fileID: 770246595}
   Text: {fileID: 0}
+  MaxItemsPerLines: 0
 --- !u!1 &2101497979
 GameObject:
   m_ObjectHideFlags: 0

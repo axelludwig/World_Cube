@@ -73,6 +73,7 @@ public class ChunkLoader : MonoBehaviour
         while(chunksToCreate.Count > 0)
         {
             chunks[chunksToCreate[0].x, chunksToCreate[0].z].Init();
+            activeChunks.Add(new ChunkCoordinates(chunksToCreate[0].x, chunksToCreate[0].z));
             chunksToCreate.RemoveAt(0);
             yield return null;
         }
@@ -160,14 +161,16 @@ public class ChunkLoader : MonoBehaviour
         {
             for (int z = coords.z - VoxelData.RENDER_DISTANCE_IN_CHUNKS; z < coords.z + VoxelData.RENDER_DISTANCE_IN_CHUNKS; z++)
             {
-                if(isChunkInWorld(new ChunkCoordinates(x, z)))
+                //Pour chaque chunk compris dans la render distance du joueur
+
+                if(isChunkInWorld(new ChunkCoordinates(x, z))) //Si le chunk est compris dans la limite du monde
                 {
-                    if(chunks[x, z] == null)
+                    if(chunks[x, z] == null) //Si le chunk n'est pas encore généré
                     {
-                        chunks[x, z] = new Chunk(new ChunkCoordinates(x, z), this, false);
-                        chunksToCreate.Add(new ChunkCoordinates(x, z));
+                        chunks[x, z] = new Chunk(new ChunkCoordinates(x, z), this, false); //On génère le chunk en mémoire
+                        chunksToCreate.Add(new ChunkCoordinates(x, z)); //Puis on l'ajoute à la liste de chunks a render au prochain update
                     }
-                    else if(!chunks[x, z].isActive)
+                    else if(!chunks[x, z].isActive) //Sinon, si le chunk est déjà généré mais juste pas render, on le render directement
                     {
                         chunks[x, z].isActive = true;
                     }
@@ -175,7 +178,7 @@ public class ChunkLoader : MonoBehaviour
 
                 for (int i = 0; i < previouslyActiveChunks.Count; i++)
                 {
-                    if (previouslyActiveChunks[i].x == x && previouslyActiveChunks[i].z == z)
+                    if (previouslyActiveChunks[i].Equals(new ChunkCoordinates(x, z)))
                     {
                         previouslyActiveChunks.RemoveAt(i);
                     }
@@ -183,7 +186,10 @@ public class ChunkLoader : MonoBehaviour
             }
         }
 
-        previouslyActiveChunks.ForEach(item => chunks[item.x, item.z].isActive = false);
+        foreach (ChunkCoordinates chunk in previouslyActiveChunks)
+        {
+            chunks[chunk.x, chunk.z].isActive = false;
+        }
     }
 
     bool isChunkInWorld(ChunkCoordinates coordinates)
