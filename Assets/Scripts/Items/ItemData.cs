@@ -8,14 +8,14 @@ public class ItemData
 {
     public int Id;
     public string DisplayName;
-    public Sprite Icon;
+    public string Icon;
     //public GameObject prefab;
     public int MaxQuantity;
     public ItemType ItemType;
     public string ItemClass;
     public Attribute Stats;
 
-    public ItemData(int id, string displayName, Sprite icon, int maxQuantity, ItemType itemType, string itemClass, Attribute stats)
+    public ItemData(int id, string displayName, string icon, int maxQuantity, ItemType itemType, string itemClass, Attribute stats)
     {
         Id = id;
         DisplayName = displayName;

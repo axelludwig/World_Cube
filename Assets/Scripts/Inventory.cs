@@ -22,7 +22,7 @@ public class Inventory
         }
         catch (System.Exception)
         {
-            Debug.Log("louuuuul l'instance du singleton et nulent là ??");
+            //Debug.Log("louuuuul l'instance du singleton et nulent là ??");
             //throw;
         }
     }

@@ -11,8 +11,10 @@ public class InventoryCanvasManager : MonoBehaviour
     private InventoryCanvasManager() { }
     public GameObject Panel;
     public TextMeshProUGUI Text;
-    public int MaxItemsPerLines;
+    public int MaxItemsPerLines = 3;
     public GameObject SpawnPoint;
+    private List<GameObject> Slots;
+    private Transform Content;
 
     public GameObject ItemPrefab;
 
@@ -25,12 +27,17 @@ public class InventoryCanvasManager : MonoBehaviour
     }
     private void Awake()
     {
+        Slots = new List<GameObject>();
         if (_instance != null && _instance != this)
             Destroy(gameObject);
         _instance = this;
 
         Text = Panel.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
-        BuildInventory();
+        Content = Panel.transform.Find("ScrollView/Viewport/ContentInventory");
+
+        foreach (Transform t in Content.transform)
+            Slots.Add(t.gameObject);
+        Debug.Log(Slots.Count);
         Panel.gameObject.SetActive(false);
     }
 
@@ -38,12 +45,19 @@ public class InventoryCanvasManager : MonoBehaviour
     {
         var playerInventory = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().gameObject.GetComponent<Player>().Inventory.GetInventory();
         if (playerInventory != null)
-        {
-            foreach (Item item in playerInventory)
+        {                
+            for (int i = 0; i < playerInventory.Count; i++)
             {
-                Instantiate(ItemPrefab, SpawnPoint.transform);
-
-            }
+                GameObject temp = Slots[i];
+                Item item = playerInventory[i];
+                var prefabText = temp.transform.Find("TextDisplayName").GetComponent<TextMeshProUGUI>();
+                var prefabQuantity = temp.transform.Find("TextQuantity").GetComponent<TextMeshProUGUI>();
+                var prefabImage = temp.transform.Find("RawImage").GetComponent<RawImage>();
+                prefabText.text = item.data.DisplayName;
+                prefabQuantity.text = item.quantity.ToString();
+                prefabImage.texture = Resources.Load<Texture2D>("ItemIcons/" + item.data.Icon);
+                temp.SetActive(true);
+            }            
         }
     }
 

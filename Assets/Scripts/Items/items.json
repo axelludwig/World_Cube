@@ -3,7 +3,7 @@
     {
       "Id": 1,
       "DisplayName": "Potion de mini soin",
-      "Icon": "potion_de_soin.jpeg",
+      "Icon": "potion_de_soin",
       "MaxQuantity": 16,
       "ItemType": "Potion",
       "ItemClass": "Consumable",
@@ -17,7 +17,7 @@
     {
       "Id": 2,
       "DisplayName": "sword",
-      "Icon": "sword.jpeg",
+      "Icon": "sword",
       "MaxQuantity": 1,
       "ItemClass": "Weapon",
       "ItemType": "Sword",
@@ -29,7 +29,7 @@
     {
       "Id": 3,
       "DisplayName": "chestplate",
-      "Icon": "sword.jpeg",
+      "Icon": "sword",
       "MaxQuantity": 1,
       "ItemClass": "Equipment",
       "ItemType": "Chestplate",

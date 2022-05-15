@@ -12,6 +12,7 @@ public class NetworkPlayer : NetworkEntity
             GetComponent<PlayerPrefabScript>().InitCameras();
             gameObject.transform.position = ChunkLoader.spawnPosition;
             ChunkLoader.player = gameObject.transform;
+            InventoryCanvasManager.Instance.BuildInventory();
         }
         else
         {
