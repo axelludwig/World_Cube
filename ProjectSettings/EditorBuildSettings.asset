@@ -5,13 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Scene Guidon.unity
     guid: 443ebeb9167fa424d8f9f4ea3425a067
   - enabled: 0
     path: Assets/Scenes/Scene Guidon OLD.unity
     guid: 005b2a86244bdc54599edb2a312857e8
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Medecine.unity
     guid: feab14d69e272744295abaed877f198c
   - enabled: 0
