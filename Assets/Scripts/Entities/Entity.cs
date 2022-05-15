@@ -44,7 +44,7 @@ public abstract class Entity : NetworkBehaviour
         return Damages;
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void GetDamagesServerRpc(float damages, ulong networkObjectId)
     {
         //Debug.Log("SERVER : " + damages);
