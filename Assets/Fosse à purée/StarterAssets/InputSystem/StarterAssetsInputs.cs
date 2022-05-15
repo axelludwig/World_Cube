@@ -29,11 +29,11 @@ namespace StarterAssets
 
 		public void OnLook(InputValue value)
 		{
-			//if(cursorInputForLook)
-			//{
-			//	LookInput(value.Get<Vector2>());
-			//}
-		}
+            if (cursorInputForLook)
+            {
+                LookInput(value.Get<Vector2>());
+            }
+        }
 
 		public void OnJump(InputValue value)
 		{
@@ -58,8 +58,8 @@ namespace StarterAssets
 
 		public void LookInput(Vector2 newLookDirection)
 		{
-			//look = newLookDirection;
-		}
+            look = newLookDirection;
+        }
 
 		public void JumpInput(bool newJumpState)
 		{
@@ -71,14 +71,14 @@ namespace StarterAssets
 			sprint = newSprintState;
 		}
 
-		//public void InventoryInput(bool newInventoryState)
-		//{
-		//	inventory = newInventoryState;
-		//	Debug.Log(inventory); 
-		//}
+        public void InventoryInput(bool newInventoryState)
+        {
+            inventory = newInventoryState;
+            Debug.Log(inventory);
+        }
 
 
-		private void OnApplicationFocus(bool hasFocus)
+        private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);
 		}
