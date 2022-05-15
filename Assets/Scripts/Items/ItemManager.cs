@@ -37,7 +37,7 @@ public class ItemManager : MonoBehaviour
 
         _instance = this;
 
-        var jsonString = readTextFile("Assets/Scripts/Items/items.json");
+        var jsonString = Resources.Load<TextAsset>("items").text;
         loadedItems = new List<ItemData>();
 
         var genericItems = JsonHelper.FromJson<ItemData>(jsonString);

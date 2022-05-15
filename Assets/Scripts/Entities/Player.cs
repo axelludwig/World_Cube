@@ -10,6 +10,7 @@ public class Player : Entity
     {
         Inventory = new Inventory();
         Inventory.AddItem(1, 1);
+        Inventory.AddItem(2, 1);
     }
 
     public Inventory GetInventory()
