@@ -19,6 +19,8 @@ public abstract class Entity : NetworkBehaviour
 
     public float AggroDistance = 30;
 
+    public float CastTime;
+
     private EntityHealthDisplayManager healthDisplayer;
 
     private void Awake()

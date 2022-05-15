@@ -2268,6 +2268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerCamera: {fileID: 0}
+  IsCasting: 0
   MoveSpeed: 2
   SprintSpeed: 5.335
   RotationSmoothTime: 0.12
@@ -2434,6 +2435,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6940ed1ebca12d04f9e90d52493e9315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Position:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  Rotation:
+    m_InternalValue: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &3916226682917048620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2508,9 +2513,10 @@ MonoBehaviour:
   experience: 0
   level: 1
   team: 0
-  Range: 0
-  Damages: 0
+  Range: 3
+  Damages: 2
   AggroDistance: 30
+  CastTime: 2
 --- !u!114 &8190199768328101847
 MonoBehaviour:
   m_ObjectHideFlags: 0

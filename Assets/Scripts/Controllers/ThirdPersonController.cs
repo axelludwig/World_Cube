@@ -14,8 +14,14 @@ namespace StarterAssets
 #endif
     public class ThirdPersonController : MonoBehaviour
     {
+        #region public attributes
+
         public GameObject PlayerCamera;
-        
+        public bool IsCasting;
+
+        #endregion
+
+        #region public inspector attributes
 
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
@@ -74,6 +80,10 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+        #endregion
+
+        #region private attributes
+
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -100,6 +110,12 @@ namespace StarterAssets
         //animation
         private EntityAnimationManager _entityAnimationManager;
 
+        private Player _entity;
+
+        private float _currentCastTime;
+
+        #endregion
+
 
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
@@ -124,12 +140,6 @@ namespace StarterAssets
             }
         }
 
-
-        private void Awake()
-        {
-
-        }
-
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
@@ -137,6 +147,8 @@ namespace StarterAssets
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
             _entityAnimationManager = GetComponent<EntityAnimationManager>();
+            _entity = GetComponent<Player>();
+
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
             _playerInput = GetComponent<PlayerInput>();
 #else
@@ -157,6 +169,7 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+            Attack();
         }
 
         private void LateUpdate()
@@ -270,6 +283,46 @@ namespace StarterAssets
             }
         }
 
+        private void Attack()
+        {
+            if (IsCasting)
+            {
+                _currentCastTime -= Time.deltaTime;
+                if (_currentCastTime < 0)
+                {
+                    IsCasting = false;
+                }
+                return;
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                StartCast();
+            }
+        }
+
+        private void StartCast()
+        {
+            IsCasting = true;
+            _currentCastTime = _entity.CastTime;
+
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, _entity.Range))
+            {
+                Debug.Log("Hitted " + hit.transform.gameObject.name);
+                GameObject gameObjectHitted = hit.transform.gameObject;
+                Entity attachedEntity = gameObjectHitted.GetComponent<Entity>();
+                if (attachedEntity != null && attachedEntity.team != _entity.team)
+                {
+                    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * _entity.Range, Color.yellow);
+                    _entity.DealDamage(attachedEntity);
+                    return;
+                }
+            }
+
+            Debug.Log("Not hit");
+            Debug.DrawRay(transform.position, transform.forward * _entity.Range, Color.white);
+        }
+
         private void JumpAndGravity()
         {
             if (Grounded)
@@ -368,7 +421,5 @@ namespace StarterAssets
                 new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z),
                 GroundedRadius);
         }
-
-       
     }
 }
