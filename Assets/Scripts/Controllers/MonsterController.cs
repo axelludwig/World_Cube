@@ -47,6 +47,7 @@ public class MonsterController : MonoBehaviour
         if (Vector3.Distance(transform.position, _target.transform.position) < _entity.Range)
         {
             StartCast();
+            return;
         }
 
         transform.position += transform.forward * Time.deltaTime * _entity.moveSpeed;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -111,6 +112,7 @@ namespace StarterAssets
         private EntityAnimationManager _entityAnimationManager;
 
         private Player _entity;
+        private Transform _playerRaycastStartPoint;
 
         private float _currentCastTime;
 
@@ -148,6 +150,7 @@ namespace StarterAssets
             _input = GetComponent<StarterAssetsInputs>();
             _entityAnimationManager = GetComponent<EntityAnimationManager>();
             _entity = GetComponent<Player>();
+            _playerRaycastStartPoint = transform.Find("PlayerRaycastStartPoint");
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
             _playerInput = GetComponent<PlayerInput>();
@@ -177,7 +180,7 @@ namespace StarterAssets
             CameraRotation();
         }
 
-        
+
 
         private void GroundedCheck()
         {
@@ -306,21 +309,42 @@ namespace StarterAssets
             IsCasting = true;
             _currentCastTime = _entity.CastTime;
 
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, _entity.Range))
+            foreach (Vector3 startPoints in GetRaycastStartPoints())
             {
-                Debug.Log("Hitted " + hit.transform.gameObject.name);
-                GameObject gameObjectHitted = hit.transform.gameObject;
-                Entity attachedEntity = gameObjectHitted.GetComponent<Entity>();
-                if (attachedEntity != null && attachedEntity.team != _entity.team)
-                {
-                    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * _entity.Range, Color.yellow);
-                    _entity.DealDamage(attachedEntity);
-                    return;
-                }
-            }
+                Color color = Color.white;
 
-            Debug.Log("Not hit");
-            Debug.DrawRay(transform.position, transform.forward * _entity.Range, Color.white);
+                if (Physics.Raycast(startPoints, transform.TransformVector(Vector3.forward), out RaycastHit hit, _entity.Range))
+                {
+                    Debug.Log("Hitted " + hit.transform.gameObject.name);
+                    GameObject gameObjectHitted = hit.transform.gameObject;
+                    Entity attachedEntity = gameObjectHitted.GetComponent<Entity>();
+                    if (attachedEntity != null && attachedEntity.team != _entity.team)
+                    {
+                        color = Color.yellow;
+                        _entity.DealDamage(attachedEntity);
+                        break;
+                    }
+                }
+                else
+                {
+                    Debug.Log("Not hit");
+                }
+
+                Debug.DrawRay(startPoints, transform.TransformVector(Vector3.forward) * _entity.Range, color, 1000);
+            }
+        }
+
+        private List<Vector3> GetRaycastStartPoints()
+        {
+            const float distance = 0.5f;
+            return new List<Vector3>
+            {
+                _playerRaycastStartPoint.position,
+                new Vector3(_playerRaycastStartPoint.position.x, _playerRaycastStartPoint.position.y + distance, _playerRaycastStartPoint.position.z),
+                new Vector3(_playerRaycastStartPoint.position.x, _playerRaycastStartPoint.position.y - distance, _playerRaycastStartPoint.position.z),
+                new Vector3(_playerRaycastStartPoint.position.x - distance, _playerRaycastStartPoint.position.y - distance, _playerRaycastStartPoint.position.z),
+                new Vector3(_playerRaycastStartPoint.position.x + distance, _playerRaycastStartPoint.position.y - distance, _playerRaycastStartPoint.position.z)
+            };
         }
 
         private void JumpAndGravity()

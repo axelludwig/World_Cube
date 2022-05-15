@@ -47,7 +47,7 @@ public abstract class Entity : NetworkBehaviour
     [ServerRpc]
     public void GetDamagesServerRpc(float damages, ulong networkObjectId)
     {
-        Debug.Log("SERVER : " + damages);
+        //Debug.Log("SERVER : " + damages);
 
         GetDamagesClientRpc(damages, networkObjectId);
 
@@ -60,7 +60,7 @@ public abstract class Entity : NetworkBehaviour
     [ClientRpc]
     public void GetDamagesClientRpc(float damages, ulong networkObjectId)
     {
-        Debug.Log("CLIENT : " + damages);
+        //Debug.Log("CLIENT : " + damages);
 
         hp -= damages;
 
