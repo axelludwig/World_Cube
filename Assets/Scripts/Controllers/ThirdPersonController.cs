@@ -95,6 +95,7 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
+        private int _animIDPunch;
 
         // player
         private float _speed;
@@ -288,6 +289,8 @@ namespace StarterAssets
 
         private void Attack()
         {
+            _entityAnimationManager.SetBool(_animIDPunch, false);
+
             if (IsCasting)
             {
                 _currentCastTime -= Time.deltaTime;
@@ -306,32 +309,27 @@ namespace StarterAssets
 
         private void StartCast()
         {
+            _entityAnimationManager.SetBool(_animIDPunch, true);
+            
             IsCasting = true;
             _currentCastTime = _entity.CastTime;
 
             foreach (Vector3 startPoints in GetRaycastStartPoints())
             {
-                Color color = Color.white;
-
                 if (Physics.Raycast(startPoints, transform.TransformVector(Vector3.forward), out RaycastHit hit, _entity.Range))
                 {
-                    Debug.Log("Hitted " + hit.transform.gameObject.name);
                     GameObject gameObjectHitted = hit.transform.gameObject;
                     Entity attachedEntity = gameObjectHitted.GetComponent<Entity>();
                     if (attachedEntity != null && attachedEntity.team != _entity.team)
                     {
-                        color = Color.yellow;
+                        Debug.Log("Hitted entity " + hit.transform.gameObject.name);
                         _entity.DealDamage(attachedEntity);
                         break;
                     }
                 }
-                else
-                {
-                    Debug.Log("Not hit");
-                }
-
-                Debug.DrawRay(startPoints, transform.TransformVector(Vector3.forward) * _entity.Range, color, 1000);
             }
+
+            Debug.Log("No hit");
         }
 
         private List<Vector3> GetRaycastStartPoints()
@@ -423,6 +421,7 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+            _animIDPunch = Animator.StringToHash("Punch");
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

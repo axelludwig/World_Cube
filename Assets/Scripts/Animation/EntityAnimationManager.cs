@@ -44,13 +44,17 @@ public class EntityAnimationManager : NetworkBehaviour
 
     public void SetBool(int animId, bool value)
     {
-        SetBoolServerRPC(animId, value);
+        bool currentValue = _animator.GetBool(animId);
+        if (value != currentValue)
+            SetBoolServerRPC(animId, value);
 
     }
 
     public void SetFloat(int animId, float value)
     {
-        SetFloatServerRPC(animId, value);
+        float currentValue = _animator.GetFloat(animId);
+        if (value != currentValue)
+            SetFloatServerRPC(animId, value);
     }
 
     private void OnFootstep(AnimationEvent animationEvent)
