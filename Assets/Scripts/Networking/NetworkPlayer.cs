@@ -20,11 +20,6 @@ public class NetworkPlayer : NetworkEntity
         }
 
         gameObject.name = "Player " + GetComponent<NetworkObject>().NetworkObjectId;
-
-        if (IsServer && IsOwnedByServer)
-        {
-            SpawnManager.Instantiate();
-        }
     }
 
     void Update()

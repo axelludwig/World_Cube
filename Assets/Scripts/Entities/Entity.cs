@@ -35,21 +35,42 @@ public abstract class Entity : NetworkBehaviour
         Biome2
     }
 
+    /// <summary>
+    /// Called by clients or IAs
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns></returns>
     public float DealDamage(Entity target)
     {
         ulong netObjId = target.GetComponent<NetworkObject>().NetworkObjectId;
 
-        target.GetDamagesServerRpc(Damages, netObjId);
+        if (NetworkManager.Singleton.IsServer) //Si l'IA fait des dégats
+        {
+            GetDamagesServerSide(Damages);
+        }
+        else //Si c'est un joueur qui fait des dégats
+        {
+            target.GetDamagesServerRpc(Damages, netObjId);
+        }
 
         return Damages;
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc]
     public void GetDamagesServerRpc(float damages, ulong networkObjectId)
     {
-        //Debug.Log("SERVER : " + damages);
+        GetDamagesServerSide(damages);
+    }
 
-        GetDamagesClientRpc(damages, networkObjectId);
+    /// <summary>
+    /// Only on server side
+    /// </summary>
+    /// <param name="damages"></param>
+    public void GetDamagesServerSide(float damages)
+    {
+        ConsoleLogger.instance.Log("entity took " + damages + " damages");
+
+        GetDamagesClientRpc(damages);
 
         if (hp - damages < 0)
         {
@@ -58,7 +79,7 @@ public abstract class Entity : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void GetDamagesClientRpc(float damages, ulong networkObjectId)
+    public void GetDamagesClientRpc(float damages)
     {
         //Debug.Log("CLIENT : " + damages);
 

@@ -48,4 +48,15 @@ public class GameNetworkManager : MonoBehaviour
         GUILayout.Label("Mode: " + mode);
         GUILayout.Label("Connected to ip : " + NetworkManager.Singleton.gameObject.GetComponent<UNetTransport>().ConnectAddress);
     }
+
+    private void Start()
+    {
+        NetworkManager.Singleton.OnServerStarted += InitSpawner;
+        NetworkManager.Singleton.OnServerStarted += ConsoleLogger.instance.Init;
+    }
+
+    private void InitSpawner()
+    {
+        SpawnManager.Instantiate();
+    }
 }

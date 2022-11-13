@@ -113,7 +113,7 @@ namespace StarterAssets
         private EntityAnimationManager _entityAnimationManager;
 
         private Player _entity;
-        private Transform _playerRaycastStartPoint;
+        private Transform _playerProjectilePoint;
 
         private float _currentCastTime;
 
@@ -130,6 +130,8 @@ namespace StarterAssets
         private const float _threshold = 0.01f;
 
         private bool _hasAnimator;
+
+        private GameObject testProjectile;
 
         private bool IsCurrentDeviceMouse
         {
@@ -151,7 +153,7 @@ namespace StarterAssets
             _input = GetComponent<StarterAssetsInputs>();
             _entityAnimationManager = GetComponent<EntityAnimationManager>();
             _entity = GetComponent<Player>();
-            _playerRaycastStartPoint = transform.Find("PlayerRaycastStartPoint");
+            _playerProjectilePoint = transform.Find("PlayerProjectileStartPoint");
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
             _playerInput = GetComponent<PlayerInput>();
@@ -164,6 +166,8 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+
+            testProjectile = Resources.Load("Projectiles/BalleDePoule") as GameObject;
         }
 
         private void Update()
@@ -289,8 +293,6 @@ namespace StarterAssets
 
         private void Attack()
         {
-            _entityAnimationManager.SetBool(_animIDPunch, false);
-
             if (IsCasting)
             {
                 _currentCastTime -= Time.deltaTime;
@@ -309,40 +311,17 @@ namespace StarterAssets
 
         private void StartCast()
         {
-            _entityAnimationManager.SetBool(_animIDPunch, true);
-            
             IsCasting = true;
             _currentCastTime = _entity.CastTime;
 
-            foreach (Vector3 startPoints in GetRaycastStartPoints())
-            {
-                if (Physics.Raycast(startPoints, transform.TransformVector(Vector3.forward), out RaycastHit hit, _entity.Range))
-                {
-                    GameObject gameObjectHitted = hit.transform.gameObject;
-                    Entity attachedEntity = gameObjectHitted.GetComponent<Entity>();
-                    if (attachedEntity != null && attachedEntity.team != _entity.team)
-                    {
-                        Debug.Log("Hitted entity " + hit.transform.gameObject.name);
-                        _entity.DealDamage(attachedEntity);
-                        break;
-                    }
-                }
-            }
+            //Déplacement face à la caméra
+            transform.rotation = Quaternion.Euler(0.0f, PlayerCamera.transform.eulerAngles.y, 0.0f);
+
+            //Instantiate projectile de test
+            GameObject projectile = Instantiate(testProjectile, _playerProjectilePoint.transform.position, PlayerCamera.transform.rotation);
+            projectile.GetComponent<BaseProjectile>().SetUp(_entity);
 
             Debug.Log("No hit");
-        }
-
-        private List<Vector3> GetRaycastStartPoints()
-        {
-            const float distance = 0.5f;
-            return new List<Vector3>
-            {
-                _playerRaycastStartPoint.position,
-                new Vector3(_playerRaycastStartPoint.position.x, _playerRaycastStartPoint.position.y + distance, _playerRaycastStartPoint.position.z),
-                new Vector3(_playerRaycastStartPoint.position.x, _playerRaycastStartPoint.position.y - distance, _playerRaycastStartPoint.position.z),
-                new Vector3(_playerRaycastStartPoint.position.x - distance, _playerRaycastStartPoint.position.y - distance, _playerRaycastStartPoint.position.z),
-                new Vector3(_playerRaycastStartPoint.position.x + distance, _playerRaycastStartPoint.position.y - distance, _playerRaycastStartPoint.position.z)
-            };
         }
 
         private void JumpAndGravity()
